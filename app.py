@@ -7,14 +7,15 @@ from passlib.hash import bcrypt
 
 from eraf_backend.eraf_config import localDevConfig
 from eraf_backend.eraf_model import db, User, Subject, Chapter, Quiz, Question, Score
-from eraf_backend.eraf_api import User_login,Add_subject
+from eraf_backend.eraf_api import User_login,User_register,Add_subject,Add_chapter,Add_question,Add_quiz
 
-
+from eraf_backend.eraf_config import cache
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(localDevConfig)
     db.init_app(app)
+    cache.init_app(app)
 
     return app
 
@@ -44,12 +45,23 @@ with app.app_context():
 def hello():
     return "Hello World!"
 
+@app.route("/test")
+@cache.cached(timeout=10)
+def test():
+    return {"time":str(datetime.now())}
+
 
 
 api.add_resource(User_login, "/login")
 api.add_resource(Add_subject, "/add_subject")
 
+api.add_resource(Add_chapter,"/add_chapter","/add_chapter/<int:sub_id>","/edit_chapter/<int:chap_id>","/delete_chapter/<int:chap_id>")
 
+api.add_resource(Add_question,"/add_question/<int:quiz_id>","/edit_question/<int:question_id>","/delete_question/<int:question_id>")
+
+api.add_resource(Add_quiz,"/add_quiz","/add_quiz/<int:chap_id>","/edit_quiz/<int:quiz_id>","/delete_quiz/<int:quiz_id>")
+
+api.add_resource(User_register,"/register")
 
 
 
