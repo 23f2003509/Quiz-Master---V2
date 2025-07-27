@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from passlib.hash import bcrypt
 
 
-
+from eraf_backend.eraf_task import *
 
 
 class User_login(Resource):
@@ -362,4 +362,28 @@ class Add_question(Resource):
     
 
 
+
+##########################################
+
+
+
+class Export_details(Resource):
+    @jwt_required()
+    def get(self):
+        claims = get_jwt()
+        user_id = claims.get("user_id")
+        username = get_jwt_identity()
+
+        # 🚫 Only users (not admin) can export their own details
+        if username == "admin":
+            return {'message': 'Only users (not admin) can export their own details.'}, 403
+
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            return {'message': 'User not found'}, 404
+
+        # ✅ Schedule async task to email report to this user
+        export_scores.apply_async(args=[user_id])
+
+        return {'message': 'Your report is being prepared and will be emailed shortly.'}, 200
 

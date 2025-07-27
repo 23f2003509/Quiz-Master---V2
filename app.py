@@ -7,15 +7,23 @@ from passlib.hash import bcrypt
 
 from eraf_backend.eraf_config import localDevConfig
 from eraf_backend.eraf_model import db, User, Subject, Chapter, Quiz, Question, Score
-from eraf_backend.eraf_api import User_login,User_register,Add_subject,Add_chapter,Add_question,Add_quiz
+from eraf_backend.eraf_api import User_login,User_register,Add_subject,Add_chapter,Add_question,Add_quiz,Export_details
 
-from eraf_backend.eraf_config import cache
+from eraf_backend.eraf_config import cache #redis and its config
+from eraf_backend.eraf_celery_config import *
+
+from eraf_backend import eraf_task
+
+from flask_mail import Mail
+mail=Mail() # mail config
+
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(localDevConfig)
     db.init_app(app)
     cache.init_app(app)
+    mail.init_app(app)
 
     return app
 
@@ -32,21 +40,24 @@ def admin():
 
 
 app = create_app()
+celery=celery_init_app(app)
 CORS(app)
 api = Api(app)
 jwt = JWTManager(app)
 
 with app.app_context():
     db.create_all()
+    celery.conf.beat_schedule = CeleryConfig.beat_schedule
     admin()
+
 
 
 @app.route("/")
 def hello():
     return "Hello World!"
 
-@app.route("/test")
-@cache.cached(timeout=10)
+@app.route("/test") # for testing ki cache working
+@cache.cached(timeout=10) # cache for 10 seconds
 def test():
     return {"time":str(datetime.now())}
 
@@ -62,6 +73,8 @@ api.add_resource(Add_question,"/add_question/<int:quiz_id>","/edit_question/<int
 api.add_resource(Add_quiz,"/add_quiz","/add_quiz/<int:chap_id>","/edit_quiz/<int:quiz_id>","/delete_quiz/<int:quiz_id>")
 
 api.add_resource(User_register,"/register")
+
+api.add_resource(Export_details,"/export_details")
 
 
 
