@@ -64,7 +64,9 @@ def test():
 
 
 api.add_resource(User_login, "/login")
-api.add_resource(Add_subject, "/add_subject")
+api.add_resource(User_register,"/register")
+
+api.add_resource(Add_subject, "/subject")
 
 api.add_resource(Add_chapter,"/add_chapter","/add_chapter/<int:sub_id>","/edit_chapter/<int:chap_id>","/delete_chapter/<int:chap_id>")
 
@@ -72,7 +74,7 @@ api.add_resource(Add_question,"/add_question/<int:quiz_id>","/edit_question/<int
 
 api.add_resource(Add_quiz,"/add_quiz","/add_quiz/<int:chap_id>","/edit_quiz/<int:quiz_id>","/delete_quiz/<int:quiz_id>")
 
-api.add_resource(User_register,"/register")
+
 
 api.add_resource(Export_details,"/export_details")
 
