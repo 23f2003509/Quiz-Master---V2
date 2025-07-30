@@ -8,15 +8,16 @@ class CeleryConfig:
     timezone = "Asia/Kolkata"
     enable_utc = True  
     beat_schedule = {  # for celery beat=scheduler like cron which means run every 10 seconds
-        "add-every-10-seconds": {
+        "add-every-10-seconds_1": {
             "task": "eraf_backend.eraf_task.daily_reminder", # add task
-            "schedule": 10.0, # every 10 seconds
+            "schedule": 20.0, # every 10 seconds
         },
+         "add-every-10-seconds_2": {
+            "task": "eraf_backend.eraf_task.send_monthly_report", # add task
+            "schedule": 20.0, # every 10 seconds
+        },
+
     }
-
-
-
-
 
 
 def celery_init_app(app: Flask) -> Celery:

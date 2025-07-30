@@ -34,6 +34,9 @@
           <router-link to="/signup">Sign Up</router-link>
         </small>
       </div>
+      <div class="mt-3 text-center">
+        <router-link to="/">Back to Home</router-link>
+      </div>
     </div>
   </div>
 </template>

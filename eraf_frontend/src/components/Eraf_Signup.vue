@@ -3,7 +3,7 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="card shadow p-4">
-          <h2 class="text-center mb-4">Sign Up</h2>
+          <h2 class="text-center mb-4" >Sign Up to Quiz Master</h2>
 
           <form @submit.prevent="handleSignup">
             <div class="mb-3">
@@ -44,6 +44,11 @@
           <div class="text-center mt-3">
             <p>Already have an account?
               <router-link to="/login">Login here</router-link>
+            </p>
+          </div>
+          <div class="text-center mt-3">
+            <p>
+              <router-link to="/">Back to Home</router-link>
             </p>
           </div>
 

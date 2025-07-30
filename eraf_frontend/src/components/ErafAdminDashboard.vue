@@ -11,6 +11,7 @@
                 <!-- Right side -->
                 <div class="d-flex align-items-center">
                 <router-link to="/profile" class="nav-link me-3">Profile</router-link>
+                <router-link to="/admin_summary" class="nav-link me-3">Admin Summary</router-link>
                 <a href="/login" class="nav-link text-danger" @click.prevent="logout">Logout</a>
                 </div>
             </div>
@@ -47,7 +48,7 @@
             <i class="bi bi-patch-question-fill display-4 text-warning mb-3"></i>
             <h5 class="card-title">Manage Quizzes</h5>
             <p class="card-text">Create, update, or remove quizzes for all subjects.</p>
-            <router-link to="/manage_quizzes" class="btn btn-outline-warning mt-2 w-100">Go to Quizzes</router-link>
+            <router-link to="/manage_quizs" class="btn btn-outline-warning mt-2 w-100">Go to Quizzes</router-link>
           </div>
         </div>
       </div>

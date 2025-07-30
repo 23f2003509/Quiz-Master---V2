@@ -26,7 +26,7 @@
               <router-link class="nav-link" to="/profile">Profile</router-link>
             </li>
             <li class="nav-item">
-                <router-link class="nav-link" to="/">Logout</router-link>
+                <router-link class="nav-link" to="/" @click="logout">Logout</router-link>
             </li>
           </ul>
         </div>
@@ -351,7 +351,17 @@ export default {
           return
       }
 
+    },
+
+
+
+    //////////////////////////////chapter part done here //////////////////////////////////////
+    logout() {
+      localStorage.removeItem('admin_token')
+      sessionStorage.clear()
+      this.$router.push('/login')
     }
+
   },
   computed: {
   filteredSubjects() {

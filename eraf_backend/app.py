@@ -7,7 +7,7 @@ from passlib.hash import bcrypt
 
 from eraf_backend.eraf_config import localDevConfig
 from eraf_backend.eraf_model import db, User, Subject, Chapter, Quiz, Question, Score
-from eraf_backend.eraf_api import User_login,User_register,Add_subject,Add_chapter,Add_question,Add_quiz,Export_details,Start_quiz,Get_scores,Admin_Summary,admin_users
+from eraf_backend.eraf_api import User_login,User_register,Add_subject,Add_chapter,Add_question,Add_quiz,Export_details
 
 from eraf_backend.eraf_config import cache #redis and its config
 from eraf_backend.eraf_celery_config import *
@@ -52,21 +52,19 @@ with app.app_context():
 
 
 
-# @app.route("/")
-# def hello():
-#     return "Hello World!"
+@app.route("/")
+def hello():
+    return "Hello World!"
 
-# @app.route("/test") # for testing ki cache working
-# @cache.cached(timeout=10) # cache for 10 seconds
-# def test():
-#     return {"time":str(datetime.now())}
+@app.route("/test") # for testing ki cache working
+@cache.cached(timeout=10) # cache for 10 seconds
+def test():
+    return {"time":str(datetime.now())}
 
 
 
 api.add_resource(User_login, "/login")
-api.add_resource(User_register,"/register")
-
-api.add_resource(Add_subject, "/subject")
+api.add_resource(Add_subject, "/add_subject")
 
 api.add_resource(Add_chapter,"/add_chapter","/add_chapter/<int:sub_id>","/edit_chapter/<int:chap_id>","/delete_chapter/<int:chap_id>")
 
@@ -74,18 +72,12 @@ api.add_resource(Add_question,"/add_question/<int:quiz_id>","/edit_question/<int
 
 api.add_resource(Add_quiz,"/add_quiz","/add_quiz/<int:chap_id>","/edit_quiz/<int:quiz_id>","/delete_quiz/<int:quiz_id>")
 
-
+api.add_resource(User_register,"/register")
 
 api.add_resource(Export_details,"/export_details")
 
 
-api.add_resource(Start_quiz,"/start_quiz/<int:quiz_id>")
 
-api.add_resource(Get_scores,"/get_scores")
-
-api.add_resource(Admin_Summary,"/admin_summary")
-
-api.add_resource(admin_users,"/manage_users")
 
 
 if __name__ == "__main__":
