@@ -19,6 +19,8 @@ import Eraf_ManageUser from '@/components/Eraf_ManageUser.vue'
 
 import Eraf_AdminSummary from '@/components/Eraf_AdminSummary.vue'
 
+import Eraf_profile from '@/components/Eraf_profile.vue'
+
 function requireAdminAuth(to, from, next) {
   const token = localStorage.getItem('admin_token');
   if (!token) {
@@ -126,6 +128,11 @@ const router = createRouter({
       name: 'admin_summary',
       component: Eraf_AdminSummary,
       beforeEnter: requireAdminAuth
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Eraf_profile,
     },
    
    

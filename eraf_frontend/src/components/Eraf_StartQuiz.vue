@@ -42,7 +42,6 @@
       </button>
     </form>
 
-    <!-- RESULT MODAL -->
     <div
       class="modal fade show"
       tabindex="-1"
@@ -79,7 +78,7 @@ export default {
       },
       answers: {},
       result: null,
-      timeLeft: 0, // in seconds
+      timeLeft: 0, 
       timerInterval: null,
       isSubmitted: false,
       showResultModal: false,
@@ -105,7 +104,7 @@ export default {
       if (res.ok) {
         const data = await res.json();
         this.quiz = data;
-        this.timeLeft = data.duration * 60; // convert to seconds
+        this.timeLeft = data.duration * 60; 
         this.startTimer();
       } else {
         
@@ -118,9 +117,9 @@ export default {
           this.timeLeft--;
         } else {
           clearInterval(this.timerInterval);
-          this.submitQuiz(); // auto submit when time ends
+          this.submitQuiz(); 
         }
-      }, 1000); // 1 second
+      }, 1000);
     },
     async submitQuiz() {
       clearInterval(this.timerInterval);

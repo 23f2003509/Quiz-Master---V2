@@ -7,15 +7,15 @@ from passlib.hash import bcrypt
 
 from eraf_backend.eraf_config import localDevConfig
 from eraf_backend.eraf_model import db, User, Subject, Chapter, Quiz, Question, Score
-from eraf_backend.eraf_api import User_login,User_register,Add_subject,Add_chapter,Add_question,Add_quiz,Export_details,Start_quiz,Get_scores,Admin_Summary,admin_users
+from eraf_backend.eraf_api import User_login,User_register,Add_subject,Add_chapter,Add_question,Add_quiz,Export_details,Start_quiz,Get_scores,Admin_Summary,admin_users,User_details
 
-from eraf_backend.eraf_config import cache #redis and its config
+from eraf_backend.eraf_config import cache 
 from eraf_backend.eraf_celery_config import *
 
 from eraf_backend import eraf_task
 
 from flask_mail import Mail
-mail=Mail() # mail config
+mail=Mail() 
 
 
 def create_app():
@@ -52,15 +52,6 @@ with app.app_context():
 
 
 
-# @app.route("/")
-# def hello():
-#     return "Hello World!"
-
-# @app.route("/test") # for testing ki cache working
-# @cache.cached(timeout=10) # cache for 10 seconds
-# def test():
-#     return {"time":str(datetime.now())}
-
 
 
 api.add_resource(User_login, "/login")
@@ -86,6 +77,8 @@ api.add_resource(Get_scores,"/get_scores")
 api.add_resource(Admin_Summary,"/admin_summary")
 
 api.add_resource(admin_users,"/manage_users")
+
+api.add_resource(User_details,"/profile")
 
 
 if __name__ == "__main__":

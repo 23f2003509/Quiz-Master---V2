@@ -8,7 +8,6 @@
 
     <h2 class="text-center mb-4">Questions for Quiz ID: {{ quizId }}</h2>
 
-    <!-- Add New Question -->
     <div class="card p-3 mb-4">
       <h4 class="mb-3">Add New Question</h4>
       <form @submit.prevent="addQuestion">
@@ -31,7 +30,6 @@
       </form>
     </div>
 
-    <!-- Questions Table -->
     <div class="card p-3">
       <h4 class="mb-3">All Questions</h4>
       <table class="table table-bordered table-striped">
@@ -68,7 +66,6 @@
       </table>
     </div>
 
-    <!-- Edit Question Modal -->
     <div v-if="editMode" class="card p-3 mt-4 bg-light">
       <h4 class="mb-3">Edit Question</h4>
       <form @submit.prevent="updateQuestion">
@@ -112,7 +109,7 @@ export default {
         correct_answer: "",
       },
 
-      editQuestion: null, // to hold the question being edited
+      editQuestion: null, 
       editMode: false,
     };
   },
@@ -159,7 +156,7 @@ export default {
     },
     startEdit(q) {
       this.editMode = true;
-      this.editQuestion = { ...q }; // shallow copy
+      this.editQuestion = { ...q }; 
     },
     async updateQuestion() {
       const token = localStorage.getItem("admin_token");

@@ -68,7 +68,6 @@ def build_html_email(username,unattempted_quizzes):
 
 
 
-##########################################################
 def build_monthly_html(username, month, avg_percentage, total_quizzes):
     html_body = f"""
     <html>

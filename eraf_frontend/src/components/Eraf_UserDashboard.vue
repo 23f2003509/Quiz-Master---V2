@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
       <div class="container-fluid">
         <span class="navbar-brand fw-bold">
@@ -14,7 +13,7 @@
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/user_profile">
+              <router-link class="nav-link" to="/profile">
                 <i class="bi bi-person-circle"></i> Profile
               </router-link>
             </li>
@@ -33,14 +32,12 @@
       </div>
     </nav>
 
-    <!-- Welcome User -->
     <div class="container mt-5 text-center">
       <h4 class="fw-bold text-dark mb-3">Welcome, {{ localUsername }} 👋</h4>
       <h3 class="fw-bold mb-4 text-primary">
         <i class="bi bi-list-ul"></i> Available Quizzes
       </h3>
     </div>
-    <!-- Search & Sort Controls -->
     <div class="container mb-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
         <input
@@ -59,7 +56,6 @@
 
 
 
-    <!-- Quiz Cards -->
     <div class="container pb-5">
       <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12 mb-4" v-for="quiz in filteredQuizzes" :key="quiz.id">

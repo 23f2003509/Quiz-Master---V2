@@ -11,13 +11,11 @@
     <div v-if="loading" class="text-center text-muted">Loading summary...</div>
     <div v-else>
       <div class="row">
-        <!-- Pie Chart -->
         <div class="col-md-6 mb-4">
           <h5 class="text-center text-success">Quiz Attempts per Subject</h5>
           <canvas ref="pieChart"></canvas>
         </div>
 
-        <!-- Bar Chart -->
         <div class="col-md-6 mb-4">
           <h5 class="text-center text-info">Top Scores by Users</h5>
           <canvas ref="barChart"></canvas>
@@ -28,8 +26,8 @@
 </template>
 
 <script>
-import { Chart, registerables } from "chart.js"; // Import Chart.js - and registerables means we can use all built-in plugins
-Chart.register(...registerables);  // here we register all built-in plugins
+import { Chart, registerables } from "chart.js"; 
+Chart.register(...registerables);  
 
 export default {
   name: "Eraf_AdminSummary",
@@ -55,17 +53,15 @@ export default {
 
             const data = await res.json();
 
-            // ✅ First: stop loading so DOM renders <canvas>
             this.loading = false;
 
-            // ✅ Then: wait for next DOM render cycle, then draw
-            this.$nextTick(() => {  // wait for DOM to render and next is a lifecycle hook
+            this.$nextTick(() => {  
             this.renderCharts(data);
             });
 
         } catch (err) {
             alert("Error loading admin summary: " + err.message);
-            this.loading = false; // even in case of error
+            this.loading = false; 
         }
     },
     renderCharts(data) {
@@ -97,7 +93,7 @@ export default {
             },
             });
 
-            const barCtx = this.$refs.barChart.getContext("2d"); // here we get the canvas and canvas is a 2d context which means we can draw on it
+            const barCtx = this.$refs.barChart.getContext("2d"); 
             this.barChart = new Chart(barCtx, {
             type: "bar",
             data: {

@@ -66,7 +66,7 @@ export default {
       })
 
       const data=await response.json()
-      console.log(data) // for checking
+      console.log(data) 
       if (response.ok) {
           if (data.username === "admin") {
             localStorage.setItem("admin_username", data.username);

@@ -1,7 +1,6 @@
 <template>
   <div class="container mt-5">
     <h2 class="text-center text-primary mb-4">📊 Your Quiz Summary</h2>
-    <!-- Back Button -->
     <div class="text-center mb-4">
       <router-link to="/user" class="btn btn-outline-primary">
         ← Back to Dashboard
@@ -15,22 +14,18 @@
       </button>
     </div>
 
-    <!-- Charts -->
     <div class="row mb-5">
-      <!-- Pie Chart -->
       <div class="col-md-6 mb-4">
         <h5 class="text-center text-success">Quizzes per Subject</h5>
         <canvas ref="pieChart"></canvas>
       </div>
 
-      <!-- Bar Chart -->
       <div class="col-md-6 mb-4">
         <h5 class="text-center text-info">Scores per Quiz</h5>
         <canvas ref="barChart"></canvas>
       </div>
     </div>
 
-    <!-- Table -->
     <table class="table table-bordered table-hover">
       <thead class="table-dark">
         <tr>
@@ -109,11 +104,9 @@ export default {
     },
 
     renderCharts() {
-      // Destroy existing charts if any
       if (this.pieChart) this.pieChart.destroy();
       if (this.barChart) this.barChart.destroy();
 
-      // Pie Data (quizzes per subject)
       const subjectCounts = {};
       this.scores.forEach((s) => {
         subjectCounts[s.subject_name] = (subjectCounts[s.subject_name] || 0) + 1;
@@ -138,7 +131,6 @@ export default {
         },
       });
 
-      // Bar Data (scores per quiz)
       const quizScores = {};
       this.scores.forEach((s) => {
         quizScores[s.quiz_name] = s.percentage_score.toFixed(2);

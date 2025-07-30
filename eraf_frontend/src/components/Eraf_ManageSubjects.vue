@@ -1,7 +1,6 @@
 <template>
   <div class="container py-5">
     <div>
-         <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container-fluid">
         <router-link class="navbar-brand fw-bold" to="/">QuizMaster Admin</router-link>
@@ -33,7 +32,6 @@
       </div>
     </nav>
     </div>
-    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2 class="fw-bold">Manage Subjects</h2>
       <input
@@ -49,7 +47,6 @@
 
     </div>
 
-    <!-- Subject Cards -->
     <div v-if="subjects.length" class="row g-4">
         <div class="col-md-6" v-for="subject in filteredSubjects" :key="subject.id">
             <div class="card shadow-lg rounded-4 border-0">
@@ -69,7 +66,6 @@
                     </div>
                     </div>
 
-                    <!-- Chapters -->
                     <div v-if="subject.chapters.length">
                     <div v-for="chapter in subject.chapters" :key="chapter.id" class="bg-light rounded-3 px-3 py-2 mb-2 d-flex justify-content-between align-items-center">
                         <div>
@@ -87,7 +83,6 @@
                     </div>
                     </div>
 
-                    <!-- Add Chapter Button -->
                     <button class="btn btn-outline-success w-100 mt-3 rounded-pill fw-semibold" @click="addChapter(subject.id)">
                     <i class="bi bi-plus-circle"></i> Add Chapter
                     </button>
@@ -99,11 +94,9 @@
 
     <div v-else class="text-center text-muted mt-5">No subjects found.</div>
 
-    <!-- Add/Edit Subject Modal -->
         <div v-if="showAddSubjectModal" class="modal d-block" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-            <!-- Header -->
             <div class="modal-header">
                 <h5 class="modal-title">
                 {{ editingSubjectId ? 'Edit Subject' : 'Add Subject' }}
@@ -111,7 +104,6 @@
                 <button type="button" class="btn-close" @click="cancelSubjectForm"></button>
             </div>
 
-            <!-- Body -->
             <div class="modal-body">
                 <input
                 v-model="newSubject"
@@ -126,7 +118,6 @@
                 />
             </div>
 
-            <!-- Footer -->
             <div class="modal-footer">
                 <button class="btn btn-secondary" @click="cancelSubjectForm">Cancel</button>
                 <button
@@ -142,7 +133,6 @@
 
 
 
-    <!-- Add/Edit Chapter Modal -->
     <div v-if="showChapterModal" class="modal d-block" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -199,7 +189,6 @@ export default {
         throw new Error('Failed to fetch subjects')
       }
       const data = await res.json()
-    //   console.log(data)
       this.subjects = data || []
       console.log(this.subjects)    
     },
@@ -293,15 +282,6 @@ export default {
         }
     },
 
-
-    ///////////////////////subject part done here ///////////////////////////////////////
-
-
-
-
-
-
-
     addChapter(subjectId) {
       this.chapterName = ''
       this.chapterDescription = ''
@@ -355,7 +335,6 @@ export default {
 
 
 
-    //////////////////////////////chapter part done here //////////////////////////////////////
     logout() {
       localStorage.removeItem('admin_token')
       sessionStorage.clear()
@@ -365,15 +344,12 @@ export default {
   },
   computed: {
   filteredSubjects() {
-    // If search box is empty, show all subjects
     if (this.searchQuery === '') {
       return this.subjects;
     }
 
-    // Convert the search text to lowercase
     const searchLower = this.searchQuery.toLowerCase();
 
-    // Create a new list with only matching subjects
     const result = [];
 
     for (let i = 0; i < this.subjects.length; i++) {
@@ -383,7 +359,6 @@ export default {
     }
     }
 
-    // Return the matching subjects
     return result;
         }
     },

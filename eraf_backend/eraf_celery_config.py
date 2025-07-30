@@ -7,14 +7,14 @@ class CeleryConfig:
     result_backend = "redis://localhost:6379/1"
     timezone = "Asia/Kolkata"
     enable_utc = True  
-    beat_schedule = {  # for celery beat=scheduler like cron which means run every 10 seconds
+    beat_schedule = { 
         "add-every-10-seconds_1": {
-            "task": "eraf_backend.eraf_task.daily_reminder", # add task
-            "schedule": 20.0, # every 10 seconds
+            "task": "eraf_backend.eraf_task.daily_reminder", 
+            "schedule": 20.0, 
         },
          "add-every-10-seconds_2": {
-            "task": "eraf_backend.eraf_task.send_monthly_report", # add task
-            "schedule": 20.0, # every 10 seconds
+            "task": "eraf_backend.eraf_task.send_monthly_report", 
+            "schedule": 20.0, 
         },
 
     }

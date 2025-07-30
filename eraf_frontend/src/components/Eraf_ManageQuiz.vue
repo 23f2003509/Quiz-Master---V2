@@ -18,7 +18,6 @@
       </div>
     </nav>
 
-    <!-- Header and Search -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2 class="fw-bold">Manage Quizzes</h2>
       <input v-model="searchQuery" class="form-control w-25" placeholder="Search quizzes..." />
@@ -27,7 +26,6 @@
       </button>
     </div>
 
-    <!-- Quiz Cards -->
     <div v-if="filteredQuizzes.length" class="row g-4">
       <div class="col-md-6" v-for="quiz in filteredQuizzes" :key="quiz.id">
         <div class="card shadow-sm rounded-4 border-0">
@@ -64,7 +62,6 @@
     </div>
     <div v-else class="text-center text-muted mt-5">No quizzes found.</div>
 
-    <!-- Add/Edit Modal -->
     <div v-if="showQuizModal" class="modal d-block" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">

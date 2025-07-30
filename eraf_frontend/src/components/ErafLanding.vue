@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
       <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="#">📚 Quiz Master</a>
@@ -11,7 +10,6 @@
       </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="bg-light text-dark py-5">
       <div class="container text-center">
         <h1 class="display-4 fw-bold">Welcome to Quiz Master!</h1>
@@ -23,7 +21,6 @@
       </div>
     </section>
 
-    <!-- Features Section -->
     <section class="container my-5">
       <div class="row text-center">
         <div class="col-md-4 mb-4">
@@ -44,7 +41,6 @@
       </div>
     </section>
 
-    <!-- Footer -->
     <footer class="bg-dark text-light py-3 text-center">
       <small>&copy; 2025 Quiz Master | Built by Eraf Ali</small>
     </footer>

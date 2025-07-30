@@ -17,15 +17,15 @@ class localDevConfig(Config):
 
     CACHE_TYPE = 'redis'
     CACHE_REDIS_HOST = 'localhost'
-    CACHE_REDIS_PORT = 6379 # default
-    CACHE_REDIS_DB = 0 # default
+    CACHE_REDIS_PORT = 6379 
+    CACHE_REDIS_DB = 0 
     CACHE_REDIS_URL = 'redis://localhost:6379'
 
-    CACHE_DEFAULT_TIMEOUT = 300 # in seconds
+    CACHE_DEFAULT_TIMEOUT = 300 
 
-    MAIL_SERVER = 'localhost'            # `localhost` for local
-    MAIL_PORT = 1025                     # for local
-    MAIL_USE_TLS = False                 # True for Gmail, False for local
+    MAIL_SERVER = 'localhost'            
+    MAIL_PORT = 1025                    
+    MAIL_USE_TLS = False                
     MAIL_USERNAME = 'admin@gmail.com' 
     MAIL_PASSWORD = 'admin'
     MAIL_DEFAULT_SENDER = 'admin@gmail.com'

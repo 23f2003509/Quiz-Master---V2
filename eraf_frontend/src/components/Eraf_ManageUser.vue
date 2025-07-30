@@ -2,14 +2,12 @@
   <div class="container mt-5">
     <h2 class="text-center text-primary mb-4">Registered Users</h2>
 
-    <!-- Back to Dashboard -->
     <div class="mb-3 text-center">
       <router-link to="/admin" class="btn btn-outline-secondary">
         ← Back to Admin Dashboard
       </router-link>
     </div>
 
-    <!-- Search Bar -->
     <div class="row mb-4 justify-content-center">
       <div class="col-md-6">
         <input
@@ -21,10 +19,8 @@
       </div>
     </div>
 
-    <!-- Loading -->
     <div v-if="loading" class="text-center text-muted">Loading users...</div>
 
-    <!-- User Table -->
     <table v-else class="table table-bordered table-hover shadow-sm">
       <thead class="table-dark">
         <tr>
@@ -51,7 +47,6 @@
       </tbody>
     </table>
 
-    <!-- No Users -->
     <div v-if="filteredUsers.length === 0 && !loading" class="text-center text-muted">
       No matching users found.
     </div>

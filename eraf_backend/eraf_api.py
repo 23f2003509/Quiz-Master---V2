@@ -6,7 +6,7 @@ from eraf_backend.eraf_model import db, User, Subject, Chapter, Quiz, Question, 
 from datetime import datetime, timedelta
 from passlib.hash import bcrypt
 
-from eraf_backend.eraf_config import cache #redis and its config
+from eraf_backend.eraf_config import cache 
 
 
 
@@ -89,7 +89,7 @@ class Add_subject(Resource):
 
     @jwt_required()
     def put(self):
-        current_user= get_jwt_identity() # get the current user STORED IN JWT AS IDENTITY
+        current_user= get_jwt_identity() 
         if current_user != "admin":
             return {'message': 'only admin can update subject'}, 401
         data = request.get_json()
@@ -202,9 +202,8 @@ class Add_quiz(Resource):
                 attempts=Score.query.filter_by(quiz_id=q.id).count()
                 if attempts is not None and attempts>0:
                     q.is_active=False
-            # Convert duration in minutes → HH:MM:SS string
             duration_str = str(timedelta(minutes=q.duration))
-            date_str = q.date_created.strftime("%Y-%m-%d %H:%M:%S").split()[0]  # YYYY-MM-DD
+            date_str = q.date_created.strftime("%Y-%m-%d %H:%M:%S").split()[0] 
 
             quiz_json.append({"id":q.id,"name":q.name,
                               "description":q.description,
@@ -230,7 +229,6 @@ class Add_quiz(Resource):
         chapter_id=Chapter.query.filter_by(id=chap_id).first()
         if not chapter_id:
             return {'message': 'Chapter not found'}, 404
-        # Convert HH:MM:SS to minutes
         duration_parts = list(map(int, data.get('duration').split(':')))
         duration_minutes = duration_parts[0] * 60 + duration_parts[1]
         print(chapter_id)
@@ -258,7 +256,6 @@ class Add_quiz(Resource):
         quiz.description = description
         quiz.single_attempt=data.get('single_attempt')
 
-        # 👇 Convert HH:MM:SS string to total minutes (int)
         duration_parts = list(map(int, data.get('duration').split(':')))
         quiz.duration = duration_parts[0] * 60 + duration_parts[1]
 
@@ -290,8 +287,7 @@ class Add_question(Resource):
     @jwt_required()
     def get(self,quiz_id):
         current_user= get_jwt_identity()
-        # if current_user != "admin":
-        #     return {'message': 'only admin can view question'}, 401
+        
         question=Question.query.filter_by(quiz_id=quiz_id).all()
         question_json = []
         for q in question:
@@ -373,7 +369,7 @@ class Add_question(Resource):
 
 class Export_details(Resource):
     @jwt_required()
-    @cache.cached(timeout=10) # cache for 10 seconds
+    @cache.cached(timeout=10)
     def get(self):
         claims = get_jwt()
         user_id = claims.get("user_id")
@@ -386,7 +382,6 @@ class Export_details(Resource):
         if not user:
             return {'message': 'User not found'}, 404
 
-        # ✅ Schedule async task to email report to this user
         export_scores.apply_async(args=[user_id])
 
         return {'message': 'Your report is being prepared and will be emailed shortly.'}, 200
@@ -470,7 +465,7 @@ class Start_quiz(Resource):
         total_score = 0
         for question in question:
             total_score += 1
-            user_answer = data.get(f'question_{question.id}') # Access the user's answer for the current question
+            user_answer = data.get(f'question_{question.id}') 
             if user_answer == question.correct_answer:
                 score += 1
         percentage_score = (score / total_score) * 100
@@ -496,7 +491,7 @@ class Start_quiz(Resource):
 
 class Get_scores(Resource):
     @jwt_required()
-    @cache.cached(timeout=10) # cache for 10 seconds
+    @cache.cached(timeout=10) 
 
     def get(self):
         current_user= get_jwt_identity()
@@ -530,14 +525,13 @@ class Get_scores(Resource):
 
 class Admin_Summary(Resource):
     @jwt_required()
-    @cache.cached(timeout=10) # cache for 10 seconds
+    @cache.cached(timeout=10) 
 
     def get(self):
         current_user = get_jwt_identity()
         if current_user != "admin":
             return {'message': 'Only admin can access summary'}, 401
 
-        # -------- PIE CHART: Attempts per Subject --------
         subject_attempts = db.session.query(
             Subject.name,
             db.func.count(Score.id)
@@ -547,7 +541,6 @@ class Admin_Summary(Resource):
         pie_chart_data_label = [subject for subject, _ in subject_attempts]
         pie_chart_data_value = [attempts for _, attempts in subject_attempts]
 
-        # -------- BAR CHART: Top scorer (max percentage) per subject --------
         subquery = db.session.query(
             Score.subject_id,
             db.func.max(Score.percentage).label('max_percentage')
@@ -571,7 +564,6 @@ class Admin_Summary(Resource):
             bar_chart_data_label.append(f"{username} ({subject})")
             bar_chart_data_value.append(round(percentage, 2))
 
-        # -------- Final Response --------
         return {
             "pie_chart_data": {
                 "labels": pie_chart_data_label,
@@ -604,3 +596,25 @@ class admin_users(Resource):
                 "qualification": user.qualification,
             })
         return users_data, 200
+    
+
+class User_details(Resource):
+    @jwt_required()
+    def get(self):
+        current_user= get_jwt_identity()
+        if current_user == "admin":
+            return {'message': 'only user can get details'}, 401
+        claims = get_jwt()
+        user_id = claims.get("user_id")
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            return {'message': 'User not found'}, 404
+        user_data = {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "dob": user.dob.strftime("%Y-%m-%d") if user.dob else None,
+            "fullname": user.fullname,
+            "qualification": user.qualification,
+        }
+        return user_data, 200
