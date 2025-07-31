@@ -134,7 +134,7 @@ Header: Authorization: Bearer <user_token>
 
 **Eraf Ali**  
 IITM BS Program - Modern Application Development II  
-GitHub: [https://github.com/23f2003509/Quiz-Master---V2]
+GitHub: [https://github.com/23f2003509]
 
 ---
 
