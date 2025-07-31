@@ -131,21 +131,30 @@ export default {
         },
       });
 
+      // Prepare bar chart
       const quizScores = {};
       this.scores.forEach((s) => {
-        quizScores[s.quiz_name] = s.percentage_score.toFixed(2);
+        quizScores[s.quiz_name] = parseFloat(s.percentage_score.toFixed(2));
+      });
+
+      const barLabels = Object.keys(quizScores).sort();
+      const barValues = barLabels.map(label => quizScores[label]);
+
+      const dynamicColors = barLabels.map((_, i) => {
+        const colorList = ["#17a2b8", "#ffc107", "#007bff", "#28a745", "#dc3545", "#6610f2"];
+        return colorList[i % colorList.length];
       });
 
       const barCtx = this.$refs.barChart.getContext("2d");
       this.barChart = new Chart(barCtx, {
         type: "bar",
         data: {
-          labels: Object.keys(quizScores),
+          labels: barLabels,
           datasets: [
             {
               label: "Percentage Score",
-              data: Object.values(quizScores),
-              backgroundColor: "#17a2b8",
+              data: barValues,
+              backgroundColor: dynamicColors,
             },
           ],
         },
@@ -154,6 +163,7 @@ export default {
           scales: {
             y: {
               beginAtZero: true,
+              max: 100,
               title: {
                 display: true,
                 text: "Percentage (%)",

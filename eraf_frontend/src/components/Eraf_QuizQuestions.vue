@@ -24,7 +24,7 @@
           <input v-model="newQuestion.option4" class="form-control mt-2" placeholder="Option 4" required />
         </div>
         <div class="mb-2">
-          <input v-model="newQuestion.correct_answer" class="form-control" placeholder="Correct Answer (1/2/3/4)" required />
+          <input v-model="newQuestion.correct_answer" class="form-control" placeholder="Exact Correct Answer" required />
         </div>
         <button class="btn btn-success mt-2" type="submit">Add Question</button>
       </form>

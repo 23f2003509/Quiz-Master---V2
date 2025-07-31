@@ -76,9 +76,7 @@ Quiz_Master_Project/
 ### 🔧 Backend (Flask)
 
 ```bash
-cd eraf_backend
-python3 -m venv venv
-source venv/bin/activate
+source erafvenv/bin/activate
 pip install -r requirements.txt
 python app.py
 ```

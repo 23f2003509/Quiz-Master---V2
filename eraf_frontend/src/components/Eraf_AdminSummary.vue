@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import { Chart, registerables } from "chart.js"; 
-Chart.register(...registerables);  
+import { Chart, registerables } from "chart.js";
+Chart.register(...registerables);
 
 export default {
   name: "Eraf_AdminSummary",
@@ -39,89 +39,96 @@ export default {
     };
   },
   methods: {
-   async fetchSummary() {
-        const token = localStorage.getItem("admin_token");
+    async fetchSummary() {
+      const token = localStorage.getItem("admin_token");
 
-        try {
-            const res = await fetch("http://127.0.0.1:5000/admin_summary", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            });
-
-            if (!res.ok) throw new Error("Failed to fetch summary data");
-
-            const data = await res.json();
-
-            this.loading = false;
-
-            this.$nextTick(() => {  
-            this.renderCharts(data);
-            });
-
-        } catch (err) {
-            alert("Error loading admin summary: " + err.message);
-            this.loading = false; 
-        }
-    },
-    renderCharts(data) {
-        this.$nextTick(() => {
-            if (this.pieChart) this.pieChart.destroy();
-            if (this.barChart) this.barChart.destroy();
-
-            const pieCtx = this.$refs.pieChart.getContext("2d");
-            this.pieChart = new Chart(pieCtx, {
-            type: "pie",
-            data: {
-                labels: data.pie_chart_data.labels,
-                datasets: [
-                {
-                    data: data.pie_chart_data.values,
-                    backgroundColor: [
-                    "#007bff", // Blue
-                    "#28a745", // Green
-                    "#ffc107", //   Yellow
-                    "#dc3545", // Red
-                    "#6610f2", // Purple
-                    "#17a2b8", // Teal
-                    ],
-                },
-                ],
-            },
-            options: {
-                responsive: true,
-            },
-            });
-
-            const barCtx = this.$refs.barChart.getContext("2d"); 
-            this.barChart = new Chart(barCtx, {
-            type: "bar",
-            data: {
-                labels: data.bar_chart_data.labels,
-                datasets: [
-                {
-                    label: "Top Scores",
-                    data: data.bar_chart_data.values,
-                    backgroundColor: "#17a2b8",
-                },
-                ],
-            },
-            options: {
-                responsive: true,
-                scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                    display: true,
-                    text: "Score",
-                    },
-                },
-                },
-            },
-            });
+      try {
+        const res = await fetch("http://127.0.0.1:5000/admin_summary", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-    }
 
+        if (!res.ok) throw new Error("Failed to fetch summary data");
+
+        const data = await res.json();
+
+        this.loading = false;
+
+        this.$nextTick(() => {
+          this.renderCharts(data);
+        });
+
+      } catch (err) {
+        alert("Error loading admin summary: " + err.message);
+        this.loading = false;
+      }
+    },
+
+    renderCharts(data) {
+      this.$nextTick(() => {
+        if (this.pieChart) this.pieChart.destroy();
+        if (this.barChart) this.barChart.destroy();
+
+        // Pie Chart
+        const pieCtx = this.$refs.pieChart.getContext("2d");
+        this.pieChart = new Chart(pieCtx, {
+          type: "pie",
+          data: {
+            labels: data.pie_chart_data.labels,
+            datasets: [
+              {
+                data: data.pie_chart_data.values,
+                backgroundColor: [
+                  "#007bff", // Blue
+                  "#28a745", // Green
+                  "#ffc107", // Yellow
+                  "#dc3545", // Red
+                  "#6610f2", // Purple
+                  "#17a2b8", // Teal
+                ],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+          },
+        });
+
+        // Bar Chart
+        const barCtx = this.$refs.barChart.getContext("2d");
+        this.barChart = new Chart(barCtx, {
+          type: "bar",
+          data: {
+            labels: data.bar_chart_data.labels,
+            datasets: [
+              {
+                label: "Top Scores",
+                data: data.bar_chart_data.values,
+                backgroundColor: data.bar_chart_data.labels.map(() => {
+                  const r = Math.floor(Math.random() * 200 + 30);
+                  const g = Math.floor(Math.random() * 200 + 30);
+                  const b = Math.floor(Math.random() * 200 + 30);
+                  return `rgba(${r}, ${g}, ${b}, 0.85)`;
+                }),
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: "Score",
+                },
+              },
+            },
+          },
+        });
+      });
+    },
   },
   mounted() {
     this.fetchSummary();

@@ -22,9 +22,6 @@
           </ul>
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <router-link class="nav-link" to="/profile">Profile</router-link>
-            </li>
-            <li class="nav-item">
                 <router-link class="nav-link" to="/" @click="logout">Logout</router-link>
             </li>
           </ul>
@@ -342,25 +339,23 @@ export default {
     }
 
   },
+  
   computed: {
   filteredSubjects() {
-    if (this.searchQuery === '') {
+    if (this.searchQuery.trim() === '') {
       return this.subjects;
-    }
-
-    const searchLower = this.searchQuery.toLowerCase();
-
-    const result = [];
-
-    for (let i = 0; i < this.subjects.length; i++) {
-    const subjectName = this.subjects[i].name.toLowerCase();
-    if (subjectName.includes(searchLower)) {
-        result.push(this.subjects[i]);
-    }
-    }
-
-    return result;
         }
+
+        const searchLower = this.searchQuery.toLowerCase();
+
+        return this.subjects.filter(subject => {
+          const subjectNameMatches = subject.name.toLowerCase().includes(searchLower);
+          const chapterNameMatches = subject.chapters.some(chap =>
+            chap.name.toLowerCase().includes(searchLower)
+          );
+          return subjectNameMatches || chapterNameMatches;
+        });
+      }
     },
 
   mounted() {

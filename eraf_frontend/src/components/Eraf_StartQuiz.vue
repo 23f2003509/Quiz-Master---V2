@@ -103,12 +103,20 @@ export default {
       
       if (res.ok) {
         const data = await res.json();
+        if (data.single_attempt && data.already_attempted) {
+            alert("⚠️ You have already attempted this quiz. Multiple attempts are not allowed.");
+            this.$router.push("/user");
+            return;
+          }
+        console.log(data);
         this.quiz = data;
         this.timeLeft = data.duration * 60; 
         this.startTimer();
       } else {
         
-        alert("Failed to load quiz dont add question");
+        alert("Failed to load quiz dont have question");
+        this.$router.push("/user");
+        
       }
     },
     startTimer() {

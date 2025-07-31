@@ -87,6 +87,20 @@
               <span class="badge bg-info mb-3 align-self-start">
                 <i class="bi bi-clock me-1"></i> {{ formatDuration(quiz.duration) }}
               </span>
+              
+              <span
+                class="badge mb-3 align-self-start"
+                :class="attemptedScores[quiz.id] ? 'bg-secondary' : (quiz.single_attempt ? 'bg-danger' : 'bg-success')"
+              >
+                <i class="bi bi-check-circle me-1"></i>
+                <template v-if="attemptedScores[quiz.id]">
+                  You attempted: {{ attemptedScores[quiz.id].score }} / {{ attemptedScores[quiz.id].total }}
+                </template>
+                <template v-else>
+                  {{ quiz.single_attempt ? "Single Attempt Only" : "Multiple Attempts Allowed" }}
+                </template>
+              </span>
+
 
               <button class="btn btn-outline-primary mt-auto w-100 fw-bold" @click="startQuiz(quiz.id)">
                 <i class="bi bi-play-fill me-1"></i> Start Quiz
@@ -108,24 +122,50 @@ export default {
       searchTerm: "",
       sortOrder: "desc",
       localUsername: localStorage.getItem("username") || "User",
+      attemptedScores: {},
     };
   },
   methods: {
     async fetchQuizzes() {
-      const token = localStorage.getItem("user_token");
-      const response = await fetch("http://localhost:5000/add_quiz", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      console.log(data);
-      if (response.ok) {
-        this.quizzes = data;
-      } else {
-        alert(data.message || "Failed to fetch quizzes");
-      }
-    },
+        const token = localStorage.getItem("user_token");
+
+        
+        const res1 = await fetch("http://localhost:5000/add_quiz", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const quizzesData = await res1.json();
+
+        
+        const res2 = await fetch("http://localhost:5000/get_scores", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const scoresData = await res2.json();
+
+        
+        if (res1.ok) {
+          this.quizzes = quizzesData;
+        } else {
+          alert(quizzesData.message || "Failed to fetch quizzes");
+        }
+
+        
+        if (res2.ok) {
+          this.attemptedScores = {};
+          scoresData.forEach((s) => {
+            this.attemptedScores[s.quiz_id] = {
+              score: s.score,
+              total: s.total_score
+            };
+          });
+        } else {
+          console.warn("No previous scores or error fetching them.");
+        }
+  },
+
     startQuiz(quizId) {
       this.$router.push(`/start_quiz/${quizId}`);
     },

@@ -371,6 +371,7 @@ class Export_details(Resource):
     @jwt_required()
     @cache.cached(timeout=10)
     def get(self):
+        print("Export endpoint hit")
         claims = get_jwt()
         user_id = claims.get("user_id")
         username = get_jwt_identity()
@@ -388,52 +389,59 @@ class Export_details(Resource):
 
 
 #########################################
-
 class Start_quiz(Resource):
     @jwt_required()
-    def get(self,quiz_id):
-        current_user= get_jwt_identity()
+    def get(self, quiz_id):
+        current_user = get_jwt_identity()
         if current_user == "admin":
             return {'message': 'only user can start quiz'}, 401
+        
         claims = get_jwt()
         user_id = claims.get("user_id")
         user = User.query.filter_by(id=user_id).first()
         if not user:
             return {'message': 'User not found'}, 404
         
-        quiz=Quiz.query.filter_by(id=quiz_id).first()
+        quiz = Quiz.query.filter_by(id=quiz_id).first()
         if not quiz:
             return {'message': 'Quiz not found'}, 404
+        
         question = Question.query.filter_by(quiz_id=quiz_id).all()
         if not question:
             return {'message': 'Question not found'}, 404
         
+        
+        already_attempted = Score.query.filter_by(user_id=user_id, quiz_id=quiz_id).first() is not None 
+        print(already_attempted)
+
         quiz_data = {
-            "id":quiz.id,
-            "name":quiz.name,
-            "description":quiz.description,
-            "single_attempt":quiz.single_attempt,
-            "duration":quiz.duration,
-            "date_created":quiz.date_created.strftime("%Y-%m-%d"),
-            "chapter_id":quiz.chapter_id,
-            "questions":[
+            "id": quiz.id,
+            "name": quiz.name,
+            "description": quiz.description,
+            "single_attempt": quiz.single_attempt,
+            "already_attempted": already_attempted,      
+            "duration": quiz.duration,
+            "date_created": quiz.date_created.strftime("%Y-%m-%d"),
+            "chapter_id": quiz.chapter_id,
+            "questions": [
                 {
-                    "id":question.id,
-                    "question_tag":question.question_tag,
-                    "question_statement":question.question_statement,
-                    "option1":question.option1,
-                    "option2":question.option2,
-                    "option3":question.option3,
-                    "option4":question.option4,
-                    "correct_answer":question.correct_answer,
-                    "quiz_id":question.quiz_id,
-                    "chapter_id":question.chapter_id
+                    "id": question.id,
+                    "question_tag": question.question_tag,
+                    "question_statement": question.question_statement,
+                    "option1": question.option1,
+                    "option2": question.option2,
+                    "option3": question.option3,
+                    "option4": question.option4,
+                    "correct_answer": question.correct_answer,
+                    "quiz_id": question.quiz_id,
+                    "chapter_id": question.chapter_id
                 }
                 for question in question
             ]
         }
 
-        return quiz_data,200
+        return quiz_data, 200
+
     
 
     @jwt_required()
@@ -494,6 +502,7 @@ class Get_scores(Resource):
     @cache.cached(timeout=10) 
 
     def get(self):
+        print("Get_scores endpoint hit")
         current_user= get_jwt_identity()
         if current_user == "admin":
             return {'message': 'only user can get scores'}, 401
@@ -525,13 +534,13 @@ class Get_scores(Resource):
 
 class Admin_Summary(Resource):
     @jwt_required()
-    @cache.cached(timeout=10) 
-
+    @cache.cached(timeout=10)
     def get(self):
         current_user = get_jwt_identity()
         if current_user != "admin":
             return {'message': 'Only admin can access summary'}, 401
 
+        # --- PIE CHART: Subject wise quiz attempts ---
         subject_attempts = db.session.query(
             Subject.name,
             db.func.count(Score.id)
@@ -541,28 +550,27 @@ class Admin_Summary(Resource):
         pie_chart_data_label = [subject for subject, _ in subject_attempts]
         pie_chart_data_value = [attempts for _, attempts in subject_attempts]
 
+        # --- BAR CHART: Unique (username + subject) top scores only ---
         subquery = db.session.query(
+            Score.user_id,
             Score.subject_id,
             db.func.max(Score.percentage).label('max_percentage')
-        ).group_by(Score.subject_id).subquery()
+        ).group_by(Score.user_id, Score.subject_id).subquery()
 
         top_scores = db.session.query(
             Subject.name,
             User.username,
-            Score.percentage
-        ).join(Score, Subject.id == Score.subject_id
-        ).join(User, User.id == Score.user_id
-        ).join(subquery, db.and_(
+            subquery.c.max_percentage
+        ).join(Score, db.and_(
+            Score.user_id == subquery.c.user_id,
             Score.subject_id == subquery.c.subject_id,
             Score.percentage == subquery.c.max_percentage
-        )).all()
+        )).join(User, User.id == Score.user_id
+        ).join(Subject, Subject.id == Score.subject_id
+        ).distinct().all()
 
-        bar_chart_data_label = []
-        bar_chart_data_value = []
-
-        for subject, username, percentage in top_scores:
-            bar_chart_data_label.append(f"{username} ({subject})")
-            bar_chart_data_value.append(round(percentage, 2))
+        bar_chart_data_label = [f"{username} ({subject})" for subject, username, _ in top_scores]
+        bar_chart_data_value = [round(percentage, 2) for _, _, percentage in top_scores]
 
         return {
             "pie_chart_data": {
@@ -574,6 +582,7 @@ class Admin_Summary(Resource):
                 "values": bar_chart_data_value
             }
         }, 200
+
 
 
 
